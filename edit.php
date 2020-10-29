@@ -56,58 +56,79 @@ checkCancel('cancel_button');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php include_once('includes/head.php') ?>
+    <link rel="stylesheet" href="css/add.css">
 </head>
 <body>
-    <h1>Editing Profile for UMSI</h1>
-    <?php
-    printMsg();
-    $stmt = $pdo->prepare('SELECT * FROM profile WHERE profile_id=:id');
-    $stmt->execute(array(':id' => $_GET['profile_id']));
-    if (($row = $stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
-    ?>
-        <form method="post">
-            <label for="first_name">First Name: </label><br>
-            <input type="text" value=<?=htmlentities($row['first_name'])?>
-                name="first_name" id="first_name"><br>
-            <label for="last_name">Last Name: </label><br>
-            <input type="text" value=<?=htmlentities($row['last_name'])?>
-                name="last_name" id="last_name"><br>
-            <label for="email">Email: </label><br>
-            <input type="text" value=<?=htmlentities($row['email'])?>
-                name="email" id="email"><br>
-            <label for="headline">Headline: </label><br>
-            <input type="text" value=<?=htmlentities($row['headline'])?>
-                name="headline" id="headline" size="38"><br>
-            <label for="summary">Summary: </label><br>
-            <textarea name='summary' id='summary' cols='40' rows='5'><?=htmlentities($row['summary'])?>
-            </textarea><br>
-            <label for="url_image">Image URL(optional): </label><br>
-            <input type="text" 
-                   value="<?php if(isset($row['image_url'])) echo htmlentities($row['image_url'])?>"
-                   name="url_image" id="url_image"><br>
-            <label for="position_btn">Position: </label>
-            <input type="submit" value="+" name='position_btn' id='addPos'><br>
-            <div id="position_fields">
+    <div id="container">
+        <h1>Editing Profile for UMSI</h1>
+        <?php
+        printMsg();
+        $stmt = $pdo->prepare('SELECT * FROM profile WHERE profile_id=:id');
+        $stmt->execute(array(':id' => $_GET['profile_id']));
+        if (($row = $stmt->fetch(PDO::FETCH_ASSOC)) !== false) {
+            ?>
+            <form method="post">
+                <p>
+                    <label for="first_name">First Name: </label>
+                    <input type="text" value=<?=htmlentities($row['first_name'])?>
+                    name="first_name" id="first_name">
+                </p>
+                <p>
+                    <label for="last_name">Last Name: </label>
+                    <input type="text" value=<?=htmlentities($row['last_name'])?>
+                    name="last_name" id="last_name">
+                </p>
+                <p>
+                    <label for="email">Email: </label>
+                    <input type="text" value=<?=htmlentities($row['email'])?>
+                    name="email" id="email">
+                </p>
+                <p>
+                    <label for="headline">Headline: </label>
+                    <input type="text" value=<?=htmlentities($row['headline'])?>
+                    name="headline" id="headline" size="38">
+                </p>
+                <p>
+                    <label for="summary">Summary: </label><br>
+                    <textarea name='summary' id='summary' cols='40' rows='5'><?=htmlentities($row['summary'])?>
+                    </textarea>
+                </p>
+                <p>
+                    <label for="url_image">Image URL(optional): </label><br>
+                    <input type="text" 
+                    value="<?php if(isset($row['image_url'])) echo htmlentities($row['image_url'])?>"
+                    name="url_image" id="url_image"><br>
+                </p>
+                <p>
+                    <label for="education_btn">Education: </label>
+                    <input type="submit" value="+" name='education_btn' id='addEdu'>
+                </p>
+                <p>
+                    <label for="position_btn">Position: </label>
+                    <input type="submit" value="+" name='position_btn' id='addPos'><br>
+                </p>
+                <div id="position_fields">
                 <?php 
-                $countPos = 1;
-                $positions = loadPos($pdo, $_GET['profile_id']);
-                foreach ($positions as $pos) { 
-                    echo '<div id="position'.$countPos.'"> 
+                    $countPos = 1;
+                    $positions = loadPos($pdo, $_GET['profile_id']);
+                    foreach ($positions as $pos) { 
+                        echo '<div id="position'.$countPos.'"> 
                         <p>Year: <input type="text" name="year'.$countPos.'" value="'.htmlentities($pos['year']).'" /> 
                         <input type="button" value="-" 
-                            onclick="$(\'#position'.$countPos.'\').remove();return false;"></p> 
+                        onclick="$(\'#position'.$countPos.'\').remove();return false;"></p> 
                         <textarea name="desc'.$countPos.'" rows="8" cols="80">'.htmlentities($pos['description']).'</textarea> 
                         </div>';
-                    $countPos++;
-                }
+                        $countPos++;
+                    }
                 ?>
-            </div>
-            <input type="submit" value="Save" name='add_button'>
-            <input type="submit" value="Cancel" name='cancel_button'>
-        </form>
-    <?php } else {
-        setErrorMsg('Bad data', 'index.php');
-    } ?>
+                </div>
+                <input type="submit" value="Save" name='add_button'>
+                <input type="submit" value="Cancel" name='cancel_button'>
+            </form>
+            <?php } else {
+                setErrorMsg('Bad data', 'index.php');
+            } ?>
+    </div>
     <script>
         countPos = <?= $countPos ?>;
 
