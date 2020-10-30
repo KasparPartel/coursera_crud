@@ -26,20 +26,51 @@ if (isset($_POST['add_button'])) {
     $profile_id = $pdo->lastInsertId();
 
     // Insert data into positions table if there is any
-    $rank = 1;
+    $rankPos = 1;
+    $rankEdu = 1;
     for ($i=1; $i <= 9; $i++) { 
-        if (! isset($_POST['year'.$i])) continue;
+        if (! isset($_POST['yearPos'.$i])) continue;
         if (! isset($_POST['desc'.$i])) continue;
-        $year = $_POST['year'.$i];
+        $year = $_POST['yearPos'.$i];
         $desc = $_POST['desc'.$i];
 
         $stmt = $pdo->prepare('INSERT INTO position (year, description, rank, profile_id)
                                 VALUES (:yr, :dc, :rk, :id)');
         $stmt->execute(array(':yr' => $year,
                              ':dc' => $desc,
-                             ':rk' => $rank,
+                             ':rk' => $rankPos,
                              ':id' => $profile_id));
-        $rank++;
+        $rankPos++;
+    }
+
+    for ($i=1; $i <= 9; $i++) { 
+        if (! isset($_POST['yearEdu'.$i])) continue;
+        if (! isset($_POST['school'.$i])) continue;
+        $year = $_POST['yearEdu'.$i];
+        $school = $_POST['school'.$i];
+        $institution = loadInstitutions($pdo, $school);
+        $school_id = false;
+
+        if (!isset($institution)) {
+            $stmt = $pdo->prepare('INSERT INTO institution (name)
+                                   VALUES (:name)');
+            $stmt->execute(array(':name' => $school));
+            print_r($PDO->lastInsertId());
+        } 
+        // TODO make it a prepare statement
+        $stmt = $pdo->query('SELECT institution_id FROM institution WHERE name = "'.$school.'"');
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $school_id = $row['institution_id'];
+        }
+        print_r($school_id);
+
+        // $stmt = $pdo->prepare('INSERT INTO education (profile_id, institution_id, rank, year)
+        //                         VALUES (:pi, :ii, :rk, :yr)');
+        // $stmt->execute(array(':yr' => $year,
+        //                      ':ii' => $school_id,
+        //                      ':rk' => $rankEdu,
+        //                      ':pi' => $profile_id));
+        // $rankEdu++;
     }
     setSuccessMsg('Record added', 'index.php');
 }
@@ -118,7 +149,7 @@ checkCancel('cancel_button');
                     console.log('Adding position ' + countPos);
                     $('#position_fields').append(
                         '<div id="position' + countPos + '"> \
-                        <p>Year: <input type="text" name="year' + countPos + '" value="" /> \
+                        <p>Year: <input type="text" name="yearPos' + countPos + '" value="" /> \
                         <input type="button" value="-" \
                             onclick="$(\'#position' + countPos + '\').remove();return false;"></p> \
                         <textarea name="desc' + countPos + '" rows="8" cols="80"></textarea> \
@@ -134,7 +165,7 @@ checkCancel('cancel_button');
                     console.log('Adding education ' + countEdu);
                     $('#education_fields').append(
                         '<div id="education' + countEdu + '"> \
-                        <p>Year: <input type="text" name="year' + countEdu + '" value="" /> \
+                        <p>Year: <input type="text" name="yearEdu' + countEdu + '" value="" /> \
                         <input type="button" value="-" \
                             onclick="$(\'#education' + countEdu + '\').remove();return false;"></p> \
                         <p>School: <input type="text" name="school' + countEdu + '" value="" class="school" /><hr></p> \

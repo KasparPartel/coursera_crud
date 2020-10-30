@@ -25,12 +25,21 @@ session_start();
         <p>Headline: <br><?=htmlentities($row['headline'])?></p>
         <p>Summary: <br><?=htmlentities($row['summary'])?></p>
         <?php
-        $positions = loadPos($pdo, $_GET['profile_id']);
-        if (isset($positions)) {
+        $positions = loadRows($pdo, $_GET['profile_id'], 'position');
+        $educations = loadRows($pdo, $_GET['profile_id'], 'education');
+        // if (isset($positions)) {
+        //     echo '<p>Positions: </p>';
+        //     echo '<ul>';
+        //     foreach ($positions as $pos) {
+        //         echo '<li>'.htmlentities($pos['description']).'</li>';
+        //     }
+        //     echo '</ul>';
+        // }
+        if (isset($educations)) {
             echo '<p>Positions: </p>';
             echo '<ul>';
-            foreach ($positions as $pos) {
-                echo '<li>'.htmlentities($pos['description']).'</li>';
+            foreach ($educations as $edu) {
+                echo '<li>'.htmlentities($edu['rank']).'</li>';
             }
             echo '</ul>';
         }

@@ -71,15 +71,38 @@ function validatePos() {
     return true;
 }
 
-function loadPos($pdo, $profile_id) {
-    $stmt = $pdo->prepare('SELECT * FROM position
+// function loadPos($pdo, $profile_id) {
+//     $stmt = $pdo->prepare('SELECT * FROM position
+//                            WHERE profile_id = :id
+//                            ORDER BY rank');
+//     $stmt->execute(array(':id' => $profile_id));
+//     $positions = array();
+//     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//         array_push($positions, $row);
+//     }
+//     return $positions;
+// }
+
+function loadRows($pdo, $profile_id, $db) {
+    $stmt = $pdo->prepare("SELECT * FROM ".$db."
                            WHERE profile_id = :id
-                           ORDER BY rank');
+                           ORDER BY rank");
     $stmt->execute(array(':id' => $profile_id));
-    $positions = array();
+    $rows = array();
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        array_push($positions, $row);
+        array_push($rows, $row);
     }
-    return $positions;
+    return $rows;
+}
+
+function loadInstitutions($pdo, $name) {
+    $stmt = $pdo->prepare('SELECT * FROM institution
+                           WHERE name = :name');
+    $stmt->execute(array(':name' => $name));
+    $institutions = array();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        array_push($institutions, $row);
+    }
+    return $institutions;
 }
 
