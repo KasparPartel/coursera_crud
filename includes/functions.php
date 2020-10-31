@@ -54,22 +54,49 @@ function validateProfile($loc) {
     }
 }
 
-function validatePos() {
-    for ($i=1; $i <= 9; $i++) { 
-        echo '<p>'.$i.'</p>';
-        if (! isset($_POST['year'.$i]) ) continue;
+function validateRows() {
+    for ($i=1; $i <= 9; $i++) {   
+        if (! isset($_POST['yearPos'.$i]) ) continue;
         if (! isset($_POST['desc'.$i]) ) continue;
         
-        if (strlen($_POST['year'.$i]) == 0 || strlen($_POST['desc'.$i]) == 0) {
+        if (strlen($_POST['yearEdu'.$i]) == 0 || strlen($_POST['desc'.$i]) == 0) {
             return 'All fields required';
         }
 
-        if (! is_numeric($_POST['year'.$i])) {
+        if (! is_numeric($_POST['yearEdu'.$i])) {
+            return 'Year must be numeric';
+        }
+    }
+    for ($i=1; $i <= 9; $i++) {
+        if (! isset($_POST['yearEdu'.$i]) ) continue;
+        if (! isset($_POST['school'.$i]) ) continue;
+        
+        if (strlen($_POST['yearEdu'.$i]) == 0 || strlen($_POST['school'.$i]) == 0) {
+            return 'All fields required';
+        }
+
+        if (! is_numeric($_POST['yearEdu'.$i])) {
             return 'Year must be numeric';
         }
     }
     return true;
 }
+
+// function validateEdu() {
+//     for ($i=1; $i <= 9; $i++) { 
+//         if (! isset($_POST['yearEdu'.$i]) ) continue;
+//         if (! isset($_POST['school'.$i]) ) continue;
+        
+//         if (strlen($_POST['yearEdu'.$i]) == 0 || strlen($_POST['school'.$i]) == 0) {
+//             return 'All fields required';
+//         }
+
+//         if (! is_numeric($_POST['yearEdu'.$i])) {
+//             return 'Year must be numeric';
+//         }
+//     }
+//     return true;
+// }
 
 // function loadPos($pdo, $profile_id) {
 //     $stmt = $pdo->prepare('SELECT * FROM position

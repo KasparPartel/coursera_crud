@@ -27,19 +27,29 @@ session_start();
         <?php
         $positions = loadRows($pdo, $_GET['profile_id'], 'position');
         $educations = loadRows($pdo, $_GET['profile_id'], 'education');
-        // if (isset($positions)) {
-        //     echo '<p>Positions: </p>';
-        //     echo '<ul>';
-        //     foreach ($positions as $pos) {
-        //         echo '<li>'.htmlentities($pos['description']).'</li>';
-        //     }
-        //     echo '</ul>';
-        // }
-        if (isset($educations)) {
+
+        if (isset($positions)) {
             echo '<p>Positions: </p>';
             echo '<ul>';
+            foreach ($positions as $pos) {
+                echo '<li>';
+                echo htmlentities($pos['year']).' / ';
+                echo htmlentities($pos['description']);
+                echo '</li>';
+            }
+            echo '</ul>';
+        }
+        if (isset($educations)) {
+            echo '<p>Educations: </p>';
+            echo '<ul>';
             foreach ($educations as $edu) {
-                echo '<li>'.htmlentities($edu['rank']).'</li>';
+                $stmt = $pdo->query("SELECT name FROM Institution
+                                       WHERE institution_id = ".$edu['institution_id']);
+                $school = $stmt->fetch(PDO::FETCH_ASSOC);
+                echo '<li>';
+                echo htmlentities($edu['year']).' / ';
+                echo htmlentities($school['name']);
+                echo '</li>';
             }
             echo '</ul>';
         }

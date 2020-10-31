@@ -9,7 +9,7 @@ if (isset($_POST['add_button'])) {
     // Validate if email is valid etc.
     validateProfile('add.php');
     // Validate position data
-    $msg = validatePos();
+    $msg = validateRows();
     if (is_string($msg)) {
         setErrorMsg($msg, 'add.php');
     }
@@ -49,13 +49,12 @@ if (isset($_POST['add_button'])) {
         $year = $_POST['yearEdu'.$i];
         $school = $_POST['school'.$i];
         $institution = loadInstitutions($pdo, $school);
-        $school_id = false;
+        $school_id = 0;
 
-        if (!isset($institution)) {
-            $stmt = $pdo->prepare('INSERT INTO institution (name)
+        if (empty($institution)) {
+            $stmt = $pdo->prepare('INSERT INTO Institution (name)
                                    VALUES (:name)');
             $stmt->execute(array(':name' => $school));
-            print_r($PDO->lastInsertId());
         } 
         // TODO make it a prepare statement
         $stmt = $pdo->query('SELECT institution_id FROM institution WHERE name = "'.$school.'"');
@@ -64,13 +63,13 @@ if (isset($_POST['add_button'])) {
         }
         print_r($school_id);
 
-        // $stmt = $pdo->prepare('INSERT INTO education (profile_id, institution_id, rank, year)
-        //                         VALUES (:pi, :ii, :rk, :yr)');
-        // $stmt->execute(array(':yr' => $year,
-        //                      ':ii' => $school_id,
-        //                      ':rk' => $rankEdu,
-        //                      ':pi' => $profile_id));
-        // $rankEdu++;
+        $stmt = $pdo->prepare('INSERT INTO education (profile_id, institution_id, rank, year)
+                                VALUES (:pi, :ii, :rk, :yr)');
+        $stmt->execute(array(':yr' => $year,
+                             ':ii' => $school_id,
+                             ':rk' => $rankEdu,
+                             ':pi' => $profile_id));
+        $rankEdu++;
     }
     setSuccessMsg('Record added', 'index.php');
 }

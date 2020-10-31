@@ -8,4 +8,4 @@
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
 
-<title>Kaspar J. Pärtel ab1a40d7</title>
+<title>Kaspar J. Pärtel 3aec913b</title>
